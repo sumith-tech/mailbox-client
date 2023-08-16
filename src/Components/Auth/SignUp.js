@@ -1,9 +1,11 @@
 import React, { useRef } from "react";
 import classes from "./Signup.module.css";
 import MainNavbar from "../Layouts/Navbar";
-import { json } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
   const emailref = useRef();
   const passwordref = useRef();
   const confirmPasswordref = useRef();
@@ -33,6 +35,7 @@ const SignUp = () => {
         }
         const data = await response.json();
         console.log(data);
+        navigate("/login");
       } catch (err) {
         alert(err.message);
       }
@@ -75,7 +78,7 @@ const SignUp = () => {
       <div className={classes.auth}>
         <spam>
           Already Have account{" "}
-          <a href="#" style={{ color: "whitesmoke" }}>
+          <a href="/login" style={{ color: "whitesmoke" }}>
             login
           </a>
         </spam>
