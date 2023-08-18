@@ -5,16 +5,22 @@ import Homepage from "./Components/Pages/Homepage";
 import "./App.css";
 import Footer from "./Components/Layouts/Footer";
 import Mailbox from "./Components/Pages/Mailbox";
+import { useSelector } from "react-redux";
+import MainNavbar from "./Components/Layouts/Navbar";
 
 const App = () => {
+  const isLoggin = useSelector((state) => state.auth.email);
+  console.log(isLoggin);
   return (
-    <div className="App">
+    <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Homepage />}></Route>
-          <Route path="/mailbox" element={<Mailbox />}></Route>
-          <Route path="/signup" element={<SignUp />}></Route>
-          <Route path="/login" element={<Login />}></Route>
+          {isLoggin && <Route path="/" element={<Homepage />}></Route>}
+          {isLoggin && <Route path="/mailbox" element={<Mailbox />}></Route>}
+          {!isLoggin && <Route path="/signup" element={<SignUp />}></Route>}
+          {!isLoggin && <Route path="/login" element={<Login />}></Route>}
+          {isLoggin && <Route path="*" element={<Homepage />}></Route>}
+          {!isLoggin && <Route path="*" element={<Login />}></Route>}
         </Routes>
       </BrowserRouter>
       <Footer />

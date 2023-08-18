@@ -1,50 +1,65 @@
-import React, { useRef, useState } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import { EditorState, convertToRaw } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
-import draftToHtml from "draftjs-to-html";
 import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Button } from "react-bootstrap";
+import MainNavbar from "../Layouts/Navbar";
+import { useSelector } from "react-redux";
 const Mailbox = () => {
-  const subjectRef = useRef();
-  const emailref = useRef();
-  const messageRef = useRef();
+  const [sendTo, setSendto] = useState();
+  const [subject, setSubject] = useState();
 
-  let editorState = EditorState.createEmpty();
-  const [description, setDescription] = useState(editorState);
+  const myemail = useSelector((state) => state.auth.email);
+
+  const [message, setMessage] = useState(EditorState.createEmpty());
   const onEditorStateChange = (editorState) => {
-    setDescription(editorState);
+    setMessage(editorState);
   };
 
   const addDetails = async (event) => {
     event.preventDefault();
-    const entredEmail = emailref.current.value;
-    const entredsubject = subjectRef.current.value;
-    const entredMessage = messageRef.current.value;
-
+    const content = convertToRaw(message.getCurrentContent());
+    const body = JSON.stringify(content.blocks[0].text);
+    console.log(body);
     const data = {
-      email: entredEmail,
-      subject: entredsubject,
-      message: entredMessage,
+      To: sendTo,
+      subject: subject,
+      message: body,
     };
+
     try {
-      const response = await fetch(
-        "https://expense-tracker-414ae-default-rtdb.firebaseio.com/inbox.json",
+      const sentResponse = await fetch(
+        `https://mailboxclient-6fa3f-default-rtdb.firebaseio.com/${myemail.replace(
+          /[.@]/g,
+          ""
+        )}/sent.json`,
         {
           method: "POST",
           body: JSON.stringify(data),
         }
       );
-      if (!response.ok) {
+      const Inboxresponse = await fetch(
+        `https://mailboxclient-6fa3f-default-rtdb.firebaseio.com/${sendTo.replace(
+          /[.@]/g,
+          ""
+        )}/inbox.json`,
+        {
+          method: "POST",
+          body: JSON.stringify(data),
+        }
+      );
+      if (!sentResponse.ok && !Inboxresponse.ok) {
         throw new Error("Something went wrong");
+      } else {
+        alert("E-mail sent successfully");
       }
     } catch (error) {
       throw error;
     }
   };
   return (
-    <>
+    <Fragment>
+      <MainNavbar />
       <div className="App">
         <div className="container">
           <div className="row">
@@ -56,7 +71,7 @@ const Mailbox = () => {
                   <input
                     type="email"
                     name="email"
-                    ref={emailref}
+                    onChange={(e) => setSendto(e.target.value)}
                     className="form-control"
                     placeholder="email"
                     required
@@ -67,7 +82,7 @@ const Mailbox = () => {
                   <input
                     type="text"
                     name="title"
-                    ref={subjectRef}
+                    onChange={(e) => setSubject(e.target.value)}
                     className="form-control"
                     required
                   />
@@ -75,23 +90,23 @@ const Mailbox = () => {
                 <div className="form-group col-md-12 editor">
                   <label className="font-weight-bold">
                     {" "}
-                    Description <span className="required"> * </span>{" "}
+                    Body: <span className="required"> * </span>{" "}
                   </label>
                   <Editor
-                    editorState={description}
+                    editorState={message}
                     toolbarClassName="toolbarClassName"
                     wrapperClassName="wrapperClassName"
                     editorClassName="editorClassName"
                     onEditorStateChange={onEditorStateChange}
                   />
-                  <input
+                  {/* <input
                     type="text"
                     style={{ display: "none" }}
                     ref={messageRef}
                     value={draftToHtml(
                       convertToRaw(description.getCurrentContent())
                     )}
-                  />
+                  /> */}
                 </div>
 
                 <div className="form-group col-sm-12 text-right">
@@ -105,7 +120,7 @@ const Mailbox = () => {
           </div>
         </div>
       </div>
-    </>
+    </Fragment>
   );
 };
 export default Mailbox;

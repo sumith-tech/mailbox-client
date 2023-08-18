@@ -20,7 +20,7 @@ const Footer = () => {
       >
         © 2020 Copyright:
         <a className="text-dark" href="https://mdbootstrap.com/">
-          MDBootstrap.com
+          MailBox.com
         </a>
       </div>
     </MDBFooter>

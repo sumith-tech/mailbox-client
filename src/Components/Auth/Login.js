@@ -2,8 +2,11 @@ import React, { useRef } from "react";
 import MainNavbar from "../Layouts/Navbar";
 import classes from "./Login.module.css";
 import { useNavigate } from "react-router-dom";
+import { authAction } from "../../Redux/auth";
+import { useDispatch } from "react-redux";
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const emailref = useRef();
   const passwordref = useRef();
@@ -15,7 +18,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDHHRNIW0ntK3SLozKPvvdA63CyOIiA9Hw",
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCoPNsR-2YbOEhCFPn7RpOqmihhG-wYUD8",
         {
           method: "POST",
           body: JSON.stringify({
@@ -31,7 +34,9 @@ const Login = () => {
       }
       const data = await response.json();
       console.log(data.idToken);
-      localStorage.setItem("token", data.idToken);
+
+      dispatch(authAction.login({ token: data.idToken, email: data.email }));
+
       navigate("/");
     } catch (err) {
       alert(err.message);
