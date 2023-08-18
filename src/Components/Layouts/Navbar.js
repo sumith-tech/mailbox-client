@@ -18,19 +18,20 @@ const MainNavbar = () => {
 
   return (
     <div>
-      <Navbar
-        bg="primary"
-        data-bs-theme="dark"
-     
-      >
+      <Navbar bg="primary" data-bs-theme="dark">
         <Container>
-          <Navbar.Brand href="/mailbox">MailBox</Navbar.Brand>
+          {isLoggin && (
+            <Navbar.Brand href="/mailbox">Compose Mail</Navbar.Brand>
+          )}
+          {!isLoggin && (
+            <Navbar.Brand href="/mailbox">Sharpner MailBox</Navbar.Brand>
+          )}
           <Nav className="me-auto">
             {isLoggin && <Nav.Link href="/">Home</Nav.Link>}
             {!isLoggin && <Nav.Link href="/login">Login</Nav.Link>}
             {!isLoggin && <Nav.Link href="/signup">SignUp</Nav.Link>}
-            {isLoggin && <Nav.Link href="/">Inbox</Nav.Link>}
-            {isLoggin && <Nav.Link href="/">Sent</Nav.Link>}
+            {isLoggin && <Nav.Link href="/inbox">Inbox</Nav.Link>}
+            {isLoggin && <Nav.Link href="/sent">Sent</Nav.Link>}
           </Nav>
         </Container>
         {isLoggin && (
