@@ -7,6 +7,7 @@ const initialAuthState = {
   token: initialToken,
   isLoggedIn: !!initialToken,
   email: initialEmail,
+  inbox: [],
 };
 
 const authSlice = createSlice({
@@ -27,6 +28,9 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       localStorage.removeItem("email");
       localStorage.removeItem("token");
+    },
+    addinbox(state, action) {
+      state.inbox = action.payload;
     },
   },
 });

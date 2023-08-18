@@ -1,13 +1,22 @@
-import React from "react";
+import React, { Fragment, useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const SentList = (props) => {
+  
+  const onclickHandler = () => {
+    props.showdetails(props);
+  };
   return (
-    <tr style={{ textAlign: "center" }}>
-      <td>{props.subject}</td>
+    <Fragment>
+    <tr
+      onClick={onclickHandler}
+      style={{ textAlign: "center", cursor: "pointer" }}
+    >
       <td>{props.to}</td>
-      <td>Me</td>
-    
+      <td>{props.subject}</td>
+      <td>{props.message}</td>
     </tr>
+    </Fragment>
   );
 };
 export default SentList;

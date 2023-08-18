@@ -10,6 +10,12 @@ import { authAction } from "../../Redux/auth";
 const MainNavbar = () => {
   const navigate = useNavigate();
   const isLoggin = useSelector((state) => state.auth.email);
+  const inbox = useSelector((state) => state.auth.inbox);
+
+  let total = 0;
+  for (let i = 0; i < inbox.length; i++) {
+    total = total + +inbox[i].unread;
+  }
   const dispatch = useDispatch();
   const LogoutHandler = () => {
     dispatch(authAction.logout());
@@ -30,7 +36,11 @@ const MainNavbar = () => {
             {isLoggin && <Nav.Link href="/">Home</Nav.Link>}
             {!isLoggin && <Nav.Link href="/login">Login</Nav.Link>}
             {!isLoggin && <Nav.Link href="/signup">SignUp</Nav.Link>}
-            {isLoggin && <Nav.Link href="/inbox">Inbox</Nav.Link>}
+            {isLoggin && (
+              <Nav.Link href="/inbox">
+                Inbox <span style={{ backgroundColor: "ButtonFace" ,color:'black'}}>{total}</span>
+              </Nav.Link>
+            )}
             {isLoggin && <Nav.Link href="/sent">Sent</Nav.Link>}
           </Nav>
         </Container>

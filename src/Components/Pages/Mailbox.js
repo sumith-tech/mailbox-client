@@ -21,10 +21,16 @@ const Mailbox = () => {
     const content = convertToRaw(message.getCurrentContent());
     const body = JSON.stringify(content.blocks[0].text);
     console.log(body);
-    const data = {
+    const sent = {
       To: sendTo,
       subject: subject,
       message: body,
+    };
+    const inbox = {
+      from: myemail,
+      subject: subject,
+      message: body,
+      unread: 1,
     };
 
     try {
@@ -35,7 +41,7 @@ const Mailbox = () => {
         )}/sent.json`,
         {
           method: "POST",
-          body: JSON.stringify(data),
+          body: JSON.stringify(sent),
         }
       );
       const Inboxresponse = await fetch(
@@ -45,7 +51,7 @@ const Mailbox = () => {
         )}/inbox.json`,
         {
           method: "POST",
-          body: JSON.stringify(data),
+          body: JSON.stringify(inbox),
         }
       );
       if (!sentResponse.ok && !Inboxresponse.ok) {
