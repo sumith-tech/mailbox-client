@@ -90,9 +90,11 @@ const Inbox = () => {
             </tr>
           </thead>
           {inboxlist.length > 0 && <tbody>{inboxlist}</tbody>}
-         
         </Table>
       )}{" "}
+      {inboxlist.length === 0 && (
+        <h3 style={{ textAlign: "center" }}>No new Message</h3>
+      )}
       {showFulldetails && (
         <Button
           onClick={() => {

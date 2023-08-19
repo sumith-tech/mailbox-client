@@ -88,6 +88,9 @@ const Sent = () => {
           <tbody>{sentlist}</tbody>
         </Table>
       )}
+       {sentlist.length === 0 && (
+        <h3 style={{ textAlign: "center" }}>No Sent Message</h3>
+      )}
       {showFulldetails && (
         <Button
           onClick={() => {
