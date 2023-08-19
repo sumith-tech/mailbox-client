@@ -32,6 +32,10 @@ const authSlice = createSlice({
     addinbox(state, action) {
       state.inbox = action.payload;
     },
+    delete(state, action) {
+      console.log(action.payload);
+      state.inbox = state.inbox.filter((dlt) => dlt.id != action.payload);
+    },
   },
 });
 

@@ -5,13 +5,53 @@ import Homepage from "./Components/Pages/Homepage";
 import "./App.css";
 import Footer from "./Components/Layouts/Footer";
 import Mailbox from "./Components/Pages/Mailbox";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Inbox from "./Components/Pages/Inbox";
 import Sent from "./Components/Pages/Sent";
+import { useEffect, useState } from "react";
+import { authAction } from "./Redux/auth";
 
 const App = () => {
   const isLoggin = useSelector((state) => state.auth.email);
-  console.log(isLoggin);
+  const myemail = useSelector((state) => state.auth.email);
+  const dispatch = useDispatch();
+
+  const getInbox = async () => {
+    try {
+      const response = await fetch(
+        `https://mailboxclient-6fa3f-default-rtdb.firebaseio.com/${myemail.replace(
+          /[.@]/g,
+          ""
+        )}/inbox.json`,
+        {
+          method: "GET",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("something went wrong");
+      }
+      const data = await response.json();
+
+      const loadedinboxBox = [];
+      for (const key in data) {
+        loadedinboxBox.push({
+          id: key,
+          from: data[key].from,
+          message: data[key].message,
+          subject: data[key].subject,
+          unread: data[key].unread,
+        });
+      }
+
+      dispatch(authAction.addinbox(loadedinboxBox));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+  useEffect(() => {
+    getInbox();
+  }, []);
+
   return (
     <div>
       <BrowserRouter>

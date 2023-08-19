@@ -58,6 +58,7 @@ const Sent = () => {
   const sentlist = sentMails.map((mail) => (
     <SentList
       key={mail.id}
+      id={mail.id}
       to={mail.sentto}
       message={mail.message}
       subject={mail.subject}
@@ -67,18 +68,25 @@ const Sent = () => {
 
   return (
     <Fragment>
-      <MainNavbar />  
+      <MainNavbar />
       {!showFulldetails && (
-        <table className="email-list table table-striped table-condensed">
+        <Table
+          striped
+          bordered
+          hover
+          variant="dark"
+          style={{ marginTop: "3em" }}
+        >
           <thead>
             <tr style={{ textAlign: "center" }}>
               <th>To</th>
               <th>Subject</th>
               <th>Body</th>
+              <th>Delete Mail</th>
             </tr>
           </thead>
           <tbody>{sentlist}</tbody>
-        </table>
+        </Table>
       )}
       {showFulldetails && (
         <Button
