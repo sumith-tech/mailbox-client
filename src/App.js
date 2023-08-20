@@ -17,6 +17,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   const getInbox = async () => {
+    console.log(1);
     try {
       const response = await fetch(
         `https://mailboxclient-6fa3f-default-rtdb.firebaseio.com/${myemail.replace(
@@ -49,7 +50,10 @@ const App = () => {
     }
   };
   useEffect(() => {
-    getInbox();
+    const inboxInterval = setInterval(() => {
+      getInbox();
+    }, 2000);
+ 
   }, []);
 
   return (

@@ -5,12 +5,13 @@ import InboxList from "./InboxList";
 import { Button, Card, Table } from "react-bootstrap";
 import { authAction } from "../../Redux/auth";
 import { useNavigate } from "react-router-dom";
+import InboxMessage from "./InboxMessage";
 const Inbox = () => {
   const inbox = useSelector((state) => state.auth.inbox);
   const [inboxmail, setInboxmail] = useState([]);
   const [showFulldetails, setshowFulldetails] = useState(false);
   const dispatch = useDispatch();
-  console.log(inbox);
+
   const navigate = useNavigate;
 
   const [from, setfrom] = useState();
@@ -51,6 +52,7 @@ const Inbox = () => {
   // useEffect(() => {
   //   getInbox();
   // }, []);
+  
 
   const showFulldetailsHandler = (item) => {
     setshowFulldetails(true);
@@ -58,6 +60,7 @@ const Inbox = () => {
     setSubject(item.subject);
     setmessage(item.message);
   };
+  console.log(inbox);
   const inboxlist = inbox.map((mail) => (
     <InboxList
       key={mail.id}
@@ -107,16 +110,7 @@ const Inbox = () => {
         </Button>
       )}
       {showFulldetails && (
-        <Card style={{ width: "50rem", margin: "3em" }}>
-          <Card.Body>
-            <Card.Subtitle className="mb-2 text-muted">
-              From:{from}
-            </Card.Subtitle>
-            <Card.Title>Subject:{subject}</Card.Title>
-
-            <Card.Text>{message}</Card.Text>
-          </Card.Body>
-        </Card>
+        <InboxMessage from={from} subject={subject} message={message} />
       )}
     </Fragment>
   );

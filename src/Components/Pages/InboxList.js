@@ -35,7 +35,7 @@ const InboxList = (props) => {
           body: JSON.stringify(inbox),
         }
       );
-      dispatch(authAction.addinbox(inbox));
+      
     }
   };
   const deleteHandler = async () => {
