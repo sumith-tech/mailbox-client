@@ -3,50 +3,37 @@ import { useSelector } from "react-redux";
 import MainNavbar from "../Layouts/Navbar";
 import { Button, Card, Table } from "react-bootstrap";
 import SentList from "./SentList";
+import SentMails from "../../Custom Hooks/sentmail";
 
 const Sent = () => {
   const myemail = useSelector((state) => state.auth.email);
   const [sentMails, SetSentMails] = useState([]);
   const [showFulldetails, setshowFulldetails] = useState(false);
-
+  let [changes, setChanges] = useState(false);
   const [to, setTo] = useState();
   const [subject, setSubject] = useState();
   const [message, setmessage] = useState();
 
-  const getSentbox = async () => {
-    try {
-      const response = await fetch(
-        `https://mailboxclient-6fa3f-default-rtdb.firebaseio.com/${myemail.replace(
-          /[.@]/g,
-          ""
-        )}/sent.json`,
-        {
-          method: "GET",
-        }
-      );
-      if (!response.ok) {
-        throw new Error("something went wrong");
-      }
-      const data = await response.json();
+  const [getSentbox] = SentMails(
+    `https://mailboxclient-6fa3f-default-rtdb.firebaseio.com/${myemail.replace(
+      /[.@]/g,
+      ""
+    )}/sent.json`
+  );
 
-      const loadedSentBox = [];
-      for (const key in data) {
-        loadedSentBox.push({
-          id: key,
-          sentto: data[key].To,
-          message: data[key].message,
-          subject: data[key].subject,
-        });
-      }
-      SetSentMails(loadedSentBox);
-      console.log(loadedSentBox);
-    } catch (err) {
-      alert(err.message);
-    }
-  };
   useEffect(() => {
-    getSentbox();
-  }, []);
+    let loadedSentBox = [];
+    for (const key in getSentbox) {
+      loadedSentBox.push({
+        id: key,
+        sentto: getSentbox[key].To,
+        message: getSentbox[key].message,
+        subject: getSentbox[key].subject,
+      });
+    }
+
+    SetSentMails(loadedSentBox);
+  }, [getSentbox]);
 
   const showFulldetailsHandler = (item) => {
     setshowFulldetails(true);
@@ -88,7 +75,7 @@ const Sent = () => {
           <tbody>{sentlist}</tbody>
         </Table>
       )}
-       {sentlist.length === 0 && (
+      {sentlist.length === 0 && (
         <h3 style={{ textAlign: "center" }}>No Sent Message</h3>
       )}
       {showFulldetails && (

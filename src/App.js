@@ -50,10 +50,11 @@ const App = () => {
     }
   };
   useEffect(() => {
-    const inboxInterval = setInterval(() => {
-      getInbox();
-    }, 2000);
- 
+    if (isLoggin) {
+      const inboxInterval = setInterval(() => {
+        getInbox();
+      }, 2000);
+    }
   }, []);
 
   return (
